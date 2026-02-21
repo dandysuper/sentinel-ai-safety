@@ -1,0 +1,5 @@
+{
+  "name": "Sentinel - AI Safety Benchmark Aggregator",
+  "description": "A comprehensive dashboard for tracking, visualizing, and comparing AI model safety profiles across multiple benchmarks.",
+  "requestFramePermissions": []
+}
