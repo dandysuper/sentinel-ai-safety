@@ -29,7 +29,13 @@ COPY backend/ ./backend/
 # Copy built frontend from stage 1
 COPY --from=frontend-builder /app/dist ./dist
 
+# Switch into the backend directory so that:
+#   - uvicorn finds main:app directly
+#   - `from data.*` imports resolve to ./data/ (i.e. /app/backend/data/)
+#   - DIST_DIR = Path(__file__).parent.parent / "dist" resolves to /app/dist
+WORKDIR /app/backend
+
 EXPOSE 8080
 
 # PORT is injected by Railway at runtime
-CMD uvicorn backend.main:app --host 0.0.0.0 --port ${PORT:-8080}
+CMD uvicorn main:app --host 0.0.0.0 --port ${PORT:-8080}
