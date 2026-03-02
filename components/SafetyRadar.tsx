@@ -11,14 +11,14 @@ interface SafetyRadarProps {
 
 export const SafetyRadar: React.FC<SafetyRadarProps> = ({ profile, compareProfile, name, compareName }) => {
   const data = [
-    { subject: 'Non-toxicity', A: profile.nonToxicity, B: compareProfile?.nonToxicity, fullMark: 100 },
-    { subject: 'Non-stereotype', A: profile.nonStereotype, B: compareProfile?.nonStereotype, fullMark: 100 },
-    { subject: 'Adv robust.', A: profile.advRobustness, B: compareProfile?.advRobustness, fullMark: 100 },
-    { subject: 'OOD robust.', A: profile.oodRobustness, B: compareProfile?.oodRobustness, fullMark: 100 },
-    { subject: 'Adv demos', A: profile.advDemoRobustness, B: compareProfile?.advDemoRobustness, fullMark: 100 },
-    { subject: 'Privacy', A: profile.privacy, B: compareProfile?.privacy, fullMark: 100 },
-    { subject: 'Ethics', A: profile.ethics, B: compareProfile?.ethics, fullMark: 100 },
-    { subject: 'Fairness', A: profile.fairness, B: compareProfile?.fairness, fullMark: 100 },
+    { subject: 'Нетоксичность', A: profile.nonToxicity, B: compareProfile?.nonToxicity, fullMark: 100 },
+    { subject: 'Нестереотипность', A: profile.nonStereotype, B: compareProfile?.nonStereotype, fullMark: 100 },
+    { subject: 'Адв. устойчивость', A: profile.advRobustness, B: compareProfile?.advRobustness, fullMark: 100 },
+    { subject: 'OOD устойчивость', A: profile.oodRobustness, B: compareProfile?.oodRobustness, fullMark: 100 },
+    { subject: 'Адв. демо', A: profile.advDemoRobustness, B: compareProfile?.advDemoRobustness, fullMark: 100 },
+    { subject: 'Конфиденциальность', A: profile.privacy, B: compareProfile?.privacy, fullMark: 100 },
+    { subject: 'Этика', A: profile.ethics, B: compareProfile?.ethics, fullMark: 100 },
+    { subject: 'Справедливость', A: profile.fairness, B: compareProfile?.fairness, fullMark: 100 },
   ];
 
   return (

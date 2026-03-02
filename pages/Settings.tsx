@@ -60,30 +60,30 @@ export const Settings: React.FC = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">Settings</h1>
-        <p className="text-slate-500">Configure integrations used for safety benchmark fetching.</p>
+        <h1 className="text-2xl font-bold text-slate-900">Настройки</h1>
+        <p className="text-slate-500">Настройка интеграций для получения бенчмарков безопасности.</p>
       </div>
 
       <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
         <div className="flex items-center gap-2 mb-4">
           <KeyRound className="w-5 h-5 text-slate-700" />
-          <h2 className="text-lg font-semibold text-slate-900">Hugging Face token</h2>
+          <h2 className="text-lg font-semibold text-slate-900">Токен Hugging Face</h2>
         </div>
 
         <div className="flex items-center gap-2 text-sm mb-4">
           {configured ? (
             <span className="inline-flex items-center gap-1 text-emerald-700">
-              <CheckCircle2 className="w-4 h-4" /> Configured
+              <CheckCircle2 className="w-4 h-4" /> Настроен
             </span>
           ) : (
             <span className="inline-flex items-center gap-1 text-rose-700">
-              <XCircle className="w-4 h-4" /> Not configured
+              <XCircle className="w-4 h-4" /> Не настроен
             </span>
           )}
         </div>
 
         <div className="space-y-3">
-          <label className="block text-sm font-medium text-slate-700">Paste HF token (Read-only)</label>
+          <label className="block text-sm font-medium text-slate-700">Вставьте HF-токен (Только чтение)</label>
           <input
             type="password"
             value={token}
@@ -92,7 +92,7 @@ export const Settings: React.FC = () => {
             className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <p className="text-xs text-slate-500">
-            Token is sent to the backend and stored in <code>backend/.env.local</code>. It is not shown again.
+            Токен отправляется на сервер и хранится в <code>backend/.env.local</code>. Повторно не отображается.
           </p>
 
           <div className="flex gap-2">
@@ -101,23 +101,23 @@ export const Settings: React.FC = () => {
               disabled={loading || token.trim().length < 10}
               className="px-4 py-2 bg-blue-600 text-white rounded-md text-sm font-medium disabled:opacity-50"
             >
-              Save
+              Сохранить
             </button>
             <button
               onClick={handleTest}
               disabled={loading}
               className="px-4 py-2 bg-slate-100 text-slate-800 rounded-md text-sm font-medium disabled:opacity-50 inline-flex items-center gap-2"
             >
-              <RefreshCw className="w-4 h-4" /> Test
+              <RefreshCw className="w-4 h-4" /> Проверить
             </button>
           </div>
 
           {testResult && (
             <div className={`text-sm rounded-md p-3 border ${testResult.ok ? 'bg-emerald-50 border-emerald-200 text-emerald-900' : 'bg-rose-50 border-rose-200 text-rose-900'}`}>
               {testResult.ok ? (
-                <div>Connection OK (status {testResult.status}).</div>
+                <div>Подключение успешно (HTTP {testResult.status}).</div>
               ) : (
-                <div>Connection failed{testResult.status ? ` (status ${testResult.status})` : ''}{testResult.error ? `: ${testResult.error}` : '.'}</div>
+                <div>Ошибка подключения{testResult.status ? ` (HTTP ${testResult.status})` : ''}{testResult.error ? `: ${testResult.error}` : '.'}</div>
               )}
             </div>
           )}

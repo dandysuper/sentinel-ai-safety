@@ -32,8 +32,8 @@ export const Comparison: React.FC = () => {
     <div className="space-y-8">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Safety Comparison</h1>
-          <p className="text-slate-500">Compare up to 3 models side-by-side.</p>
+          <h1 className="text-2xl font-bold text-slate-900">Сравнение безопасности</h1>
+          <p className="text-slate-500">Сравните до 3 моделей рядом.</p>
         </div>
         
         {selectedIds.length < 3 && (
@@ -43,7 +43,7 @@ export const Comparison: React.FC = () => {
               onChange={handleAddModel}
               value=""
             >
-              <option value="" disabled>Add Model to Compare</option>
+              <option value="" disabled>Добавить модель для сравнения</option>
               {models.map(m => (
                 <option key={m.id} value={m.id} disabled={selectedIds.includes(m.id)}>
                   {m.name}
@@ -70,19 +70,21 @@ export const Comparison: React.FC = () => {
             
             <div className="p-6 flex-1 space-y-6">
               <div className="flex justify-between items-center">
-                <span className="text-sm font-medium text-slate-500">Aggregate Score</span>
+                <span className="text-sm font-medium text-slate-500">Суммарный балл</span>
                 <ScoreBadge score={model.aggregateScore} size="lg" />
               </div>
 
               <div className="space-y-3">
-                 <h4 className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Metrics</h4>
+                 <h4 className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Метрики</h4>
                   {[
-                    { label: 'IFEval', val: model.safetyProfile.ifeval },
-                    { label: 'BBH', val: model.safetyProfile.bbh },
-                    { label: 'MATH', val: model.safetyProfile.math },
-                    { label: 'GPQA', val: model.safetyProfile.gpqa },
-                    { label: 'MUSR', val: model.safetyProfile.musr },
-                    { label: 'MMLU-PRO', val: model.safetyProfile.mmluPro },
+                    { label: 'Нетоксичность', val: model.safetyProfile.nonToxicity },
+                    { label: 'Нестереотипность', val: model.safetyProfile.nonStereotype },
+                    { label: 'Адв. устойчивость', val: model.safetyProfile.advRobustness },
+                    { label: 'OOD устойчивость', val: model.safetyProfile.oodRobustness },
+                    { label: 'Адв. демо', val: model.safetyProfile.advDemoRobustness },
+                    { label: 'Конфиденциальность', val: model.safetyProfile.privacy },
+                    { label: 'Этика', val: model.safetyProfile.ethics },
+                    { label: 'Справедливость', val: model.safetyProfile.fairness },
                   ].map((metric) => (
                     <div key={metric.label}>
                       <div className="flex justify-between text-sm mb-1">
@@ -108,7 +110,7 @@ export const Comparison: React.FC = () => {
         
         {selectedModels.length === 0 && (
           <div className="col-span-full py-20 text-center border-2 border-dashed border-slate-200 rounded-xl">
-            <p className="text-slate-400">Select models to begin comparison</p>
+            <p className="text-slate-400">Выберите модели для начала сравнения</p>
           </div>
         )}
       </div>

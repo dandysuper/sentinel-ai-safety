@@ -173,6 +173,17 @@ export function useHELMBenchmarks() {
   });
 }
 
+/**
+ * Hook specifically for MLCommons AILuminate benchmarks
+ */
+export function useAILuminateBenchmarks() {
+  return useBenchmarks({
+    sources: ["ailuminate"],
+    sortBy: "safety_score",
+    sortDesc: true,
+  });
+}
+
 // Utility functions for working with benchmark data
 
 /**

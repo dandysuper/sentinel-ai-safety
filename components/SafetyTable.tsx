@@ -51,12 +51,17 @@ const SafetyScoreBadge: React.FC<SafetyScoreBadgeProps> = ({ score }) => {
 };
 
 const SourceBadge: React.FC<{ source: string }> = ({ source }) => {
-  const isHuggingFace = source.toLowerCase().includes("hugging");
-  const isHELM = source.toLowerCase().includes("helm");
+  const s = source.toLowerCase();
+  const isHuggingFace = s.includes("hugging");
+  const isAILuminate = s.includes("ailuminate") || s.includes("mlcommons");
+  const isCalypso = s.includes("calypso") || s.includes("casi");
+  const isPhare = s.includes("phare") || s.includes("giskard");
 
   let bgColor = "bg-slate-100 text-slate-700";
   if (isHuggingFace) bgColor = "bg-yellow-100 text-yellow-800";
-  if (isHELM) bgColor = "bg-purple-100 text-purple-800";
+  if (isAILuminate) bgColor = "bg-blue-100 text-blue-800";
+  if (isCalypso) bgColor = "bg-red-100 text-red-800";
+  if (isPhare) bgColor = "bg-emerald-100 text-emerald-800";
 
   return (
     <span className={`px-2 py-0.5 rounded text-xs font-medium ${bgColor}`}>
@@ -68,9 +73,9 @@ const SourceBadge: React.FC<{ source: string }> = ({ source }) => {
 const LoadingState: React.FC = () => (
   <div className="flex flex-col items-center justify-center py-12">
     <Loader2 className="w-8 h-8 text-blue-500 animate-spin mb-4" />
-    <p className="text-slate-600">Loading safety benchmarks...</p>
+    <p className="text-slate-600">Загрузка бенчмарков безопасности...</p>
     <p className="text-sm text-slate-400 mt-1">
-      Fetching from HuggingFace and HELM
+      Получение данных из AILuminate, CalypsoAI, Phare и HuggingFace
     </p>
   </div>
 );
@@ -84,17 +89,17 @@ const ErrorState: React.FC<{ error: Error; onRetry: () => void }> = ({
       <AlertCircle className="w-8 h-8 text-red-500" />
     </div>
     <h3 className="text-lg font-semibold text-slate-900 mb-2">
-      Failed to load benchmarks
+      Не удалось загрузить бенчмарки
     </h3>
     <p className="text-slate-600 text-center max-w-md mb-4">
-      {error.message || "An error occurred while fetching the benchmark data."}
+      {error.message || "При получении данных бенчмарка произошла ошибка."}
     </p>
     <button
       onClick={onRetry}
       className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
     >
       <RefreshCw className="w-4 h-4" />
-      Retry
+      Повторить
     </button>
   </div>
 );
@@ -105,10 +110,10 @@ const EmptyState: React.FC = () => (
       <AlertCircle className="w-8 h-8 text-slate-400" />
     </div>
     <h3 className="text-lg font-semibold text-slate-900 mb-2">
-      No benchmarks found
+      Бенчмарки не найдены
     </h3>
     <p className="text-slate-600">
-      No safety benchmark data is available at this time.
+      Данные бенчмарков безопасности недоступны.
     </p>
   </div>
 );
@@ -207,10 +212,10 @@ export const SafetyTable: React.FC<SafetyTableProps> = ({
       <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between">
         <div>
           <h2 className="text-lg font-semibold text-slate-900">
-            Safety Benchmarks
+            Бенчмарки безопасности
           </h2>
           <p className="text-sm text-slate-500 mt-0.5">
-            {sortedData.length} results from aggregated sources
+            {sortedData.length} результатов из агрегированных источников
           </p>
         </div>
         <button
@@ -219,7 +224,7 @@ export const SafetyTable: React.FC<SafetyTableProps> = ({
           className="inline-flex items-center gap-2 px-3 py-1.5 text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors disabled:opacity-50"
         >
           <RefreshCw className={`w-4 h-4 ${isFetching ? "animate-spin" : ""}`} />
-          Refresh
+          Обновить
         </button>
       </div>
 
@@ -232,14 +237,14 @@ export const SafetyTable: React.FC<SafetyTableProps> = ({
                 className="text-left px-6 py-3 text-xs font-semibold text-slate-600 uppercase tracking-wider cursor-pointer hover:bg-slate-100"
                 onClick={() => handleSort("model_name")}
               >
-                Model Name
+                Название модели
                 <SortIndicator field="model_name" />
               </th>
               <th
                 className="text-left px-6 py-3 text-xs font-semibold text-slate-600 uppercase tracking-wider cursor-pointer hover:bg-slate-100"
                 onClick={() => handleSort("safety_score")}
               >
-                Safety Score
+                Балл безопасности
                 <SortIndicator field="safety_score" />
               </th>
               {showMetric && (
@@ -247,7 +252,7 @@ export const SafetyTable: React.FC<SafetyTableProps> = ({
                   className="text-left px-6 py-3 text-xs font-semibold text-slate-600 uppercase tracking-wider cursor-pointer hover:bg-slate-100"
                   onClick={() => handleSort("metric")}
                 >
-                  Metric
+                  Метрика
                   <SortIndicator field="metric" />
                 </th>
               )}
@@ -256,7 +261,7 @@ export const SafetyTable: React.FC<SafetyTableProps> = ({
                   className="text-left px-6 py-3 text-xs font-semibold text-slate-600 uppercase tracking-wider cursor-pointer hover:bg-slate-100"
                   onClick={() => handleSort("source")}
                 >
-                  Source
+                  Источник
                   <SortIndicator field="source" />
                 </th>
               )}
@@ -278,22 +283,22 @@ export const SafetyTable: React.FC<SafetyTableProps> = ({
       {/* Footer with legend */}
       <div className="px-6 py-3 bg-slate-50 border-t border-slate-200">
         <div className="flex flex-wrap items-center gap-4 text-xs text-slate-500">
-          <span className="font-medium">Score Legend:</span>
+          <span className="font-medium">Обозначения:</span>
           <span className="flex items-center gap-1.5">
             <span className="w-3 h-3 rounded-full bg-green-500"></span>
-            High (80+)
+            Высокий (80+)
           </span>
           <span className="flex items-center gap-1.5">
             <span className="w-3 h-3 rounded-full bg-yellow-500"></span>
-            Medium (60-79)
+            Средний (60-79)
           </span>
           <span className="flex items-center gap-1.5">
             <span className="w-3 h-3 rounded-full bg-orange-500"></span>
-            Low (50-59)
+            Низкий (50-59)
           </span>
           <span className="flex items-center gap-1.5">
             <span className="w-3 h-3 rounded-full bg-red-500"></span>
-            Critical (&lt;50)
+            Критический (&lt;50)
           </span>
         </div>
       </div>
@@ -312,7 +317,7 @@ const TableRow: React.FC<{
       <div className="font-medium text-slate-900">{benchmark.model_name}</div>
       {benchmark.raw_score !== undefined && (
         <div className="text-xs text-slate-500 mt-0.5">
-          Raw: {benchmark.raw_score.toFixed(3)} ({benchmark.score_scale})
+          Исх.: {benchmark.raw_score.toFixed(3)} ({benchmark.score_scale})
         </div>
       )}
     </td>

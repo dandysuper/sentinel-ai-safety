@@ -27,29 +27,29 @@ const NavBar: React.FC = () => {
             <div className="hidden sm:ml-10 sm:flex sm:space-x-4 items-center">
               <Link to="/" className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${isActive('/')}`}>
                 <div className="flex items-center gap-2">
-                  <LayoutGrid className="w-4 h-4" /> Dashboard
+                  <LayoutGrid className="w-4 h-4" /> Панель
                 </div>
               </Link>
               <Link to="/compare" className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${isActive('/compare')}`}>
                 <div className="flex items-center gap-2">
-                  <Scale className="w-4 h-4" /> Compare
+                  <Scale className="w-4 h-4" /> Сравнение
                 </div>
               </Link>
               <Link to="/benchmarks" className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${isActive('/benchmarks')}`}>
                 <div className="flex items-center gap-2">
-                  <BookOpen className="w-4 h-4" /> Benchmarks
+                  <BookOpen className="w-4 h-4" /> Бенчмарки
                 </div>
               </Link>
               <Link to="/settings" className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${isActive('/settings')}`}>
                 <div className="flex items-center gap-2">
-                  <SettingsIcon className="w-4 h-4" /> Settings
+                  <SettingsIcon className="w-4 h-4" /> Настройки
                 </div>
               </Link>
             </div>
           </div>
           <div className="flex items-center">
              <div className="text-xs text-slate-400 hidden md:block">
-               Data Updated: {data?.sourceUpdatedAt || '-'}
+               Данные обновлены: {data?.sourceUpdatedAt || '-'}
              </div>
           </div>
         </div>
@@ -63,13 +63,13 @@ const Footer: React.FC = () => (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="flex flex-col md:flex-row justify-between items-center gap-4">
         <div className="text-slate-500 text-sm">
-          © 2024 Sentinel AI Safety. Data aggregated from public benchmarks.
+          © 2024 Sentinel AI Safety. Данные агрегированы из публичных бенчмарков.
         </div>
         <div className="flex gap-6 text-sm text-slate-500">
-          <Link to="/benchmarks" className="hover:text-slate-900">Benchmarks</Link>
-          <Link to="/settings" className="hover:text-slate-900">Settings</Link>
+          <Link to="/benchmarks" className="hover:text-slate-900">Бенчмарки</Link>
+          <Link to="/settings" className="hover:text-slate-900">Настройки</Link>
           <a href="https://open-llm-leaderboard-open-llm-leaderboard.hf.space/api/leaderboard/formatted" className="hover:text-slate-900" target="_blank" rel="noreferrer">API</a>
-          <a href="https://www.promptfoo.dev/blog/top-llm-safety-bias-benchmarks/" className="hover:text-slate-900" target="_blank" rel="noreferrer">Sources</a>
+          <a href="https://www.promptfoo.dev/blog/top-llm-safety-bias-benchmarks/" className="hover:text-slate-900" target="_blank" rel="noreferrer">Источники</a>
         </div>
       </div>
     </div>

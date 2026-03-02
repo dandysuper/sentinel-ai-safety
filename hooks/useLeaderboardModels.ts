@@ -97,14 +97,16 @@ function computeAverageProfile(models: AIModel[]): SafetyProfile {
 function inferDeveloper(modelName: string): { developer: string; shortName: string } {
   if (modelName.includes('/')) {
     const [dev, ...rest] = modelName.split('/');
-    return { developer: dev || 'Community', shortName: rest.join('/') || modelName };
+    return { developer: dev || 'Сообщество', shortName: rest.join('/') || modelName };
   }
-  return { developer: 'Community', shortName: modelName };
+  return { developer: 'Сообщество', shortName: modelName };
 }
 
 function inferType(modelName: string): 'Open' | 'Closed' {
   const s = modelName.toLowerCase();
-  const closedHints = ['gpt-', 'openai', 'claude', 'anthropic', 'gemini', 'google', 'o1', 'chatgpt'];
+  const closedHints = ['gpt-', 'openai', 'claude', 'anthropic', 'gemini', 'google', 'o1', 'chatgpt', 'grok', 'kimi', 'nova'];
+  const openHints = ['llama', 'mistral', 'phi-', 'phi 3', 'phi 4', 'gemma', 'qwen', 'deepseek', 'olmo', 'falcon', 'command', 'aya', 'jamba', 'solar', 'magistral', 'yi-', 'yi 1'];
+  if (openHints.some((h) => s.includes(h))) return 'Open';
   return closedHints.some((h) => s.includes(h)) ? 'Closed' : 'Open';
 }
 
@@ -113,27 +115,47 @@ function linkForSource(source: string): string | undefined {
   if (s.includes('huggingface')) {
     return 'https://huggingface.co/spaces/AI-Secure/llm-trustworthy-leaderboard';
   }
+  if (s.includes('ailuminate') || s.includes('mlcommons')) {
+    return 'https://ailuminate.mlcommons.org/';
+  }
+  if (s.includes('calypso') || s.includes('casi')) {
+    return 'https://calypsoai.com/calypsoai-model-leaderboard/';
+  }
+  if (s.includes('phare') || s.includes('giskard')) {
+    return 'https://phare.giskard.ai/';
+  }
   return undefined;
 }
 
 function applyMetric(profile: SafetyProfile, metric: string, score: number) {
   switch (metric) {
+    // AILuminate / HuggingFace metrics
     case 'Non-toxicity':
+    case 'Toxicity Assessment':
+    case 'Harmfulness Prevention':
       profile.nonToxicity = Math.max(profile.nonToxicity, score);
       return;
     case 'Non-stereotype':
+    case 'Bias Resistance':
       profile.nonStereotype = Math.max(profile.nonStereotype, score);
       return;
     case 'Adversarial robustness':
+    case 'CASI (Jailbreak & Injection Resistance)':
+    case 'Encoding Jailbreak Resistance':
+    case 'Framing Jailbreak Resistance':
+    case 'Prompt Injection Resistance':
       profile.advRobustness = Math.max(profile.advRobustness, score);
       return;
     case 'OOD robustness':
+    case 'Factuality (Misinformation Resistance)':
       profile.oodRobustness = Math.max(profile.oodRobustness, score);
       return;
     case 'Robustness to adversarial demos':
+    case 'AWR (Agentic Warfare Resistance)':
       profile.advDemoRobustness = Math.max(profile.advDemoRobustness, score);
       return;
     case 'Privacy':
+    case 'Privacy Prevention':
       profile.privacy = Math.max(profile.privacy, score);
       return;
     case 'Ethics':
@@ -199,8 +221,8 @@ function toModels(results: BenchmarkResult[]): AIModel[] {
       name: shortName,
       developer,
       type: inferType(modelName),
-      params: 'Unknown',
-      releaseDate: 'Unknown',
+      params: 'Неизвестно',
+      releaseDate: 'Неизвестно',
       license: undefined,
       aggregateScore: round1(agg),
       safetyProfile: profile,

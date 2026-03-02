@@ -58,6 +58,9 @@ def get_hf_token() -> Optional[str]:
 
 class BenchmarkSource(str, Enum):
     HUGGINGFACE = "HuggingFace"
+    AILUMINATE = "MLCommons AILuminate"
+    CALYPSOAI = "CalypsoAI CASI"
+    PHARE = "Phare (Giskard)"
 
 
 class BenchmarkResult(BaseModel):
@@ -195,12 +198,215 @@ class HuggingFaceSafetyFetcher:
             return []
 
 
+class AILuminateFetcher:
+    """Serve MLCommons AILuminate v1.0 safety benchmark results.
+
+    Source: https://ailuminate.mlcommons.org/
+    Evaluates AI safety across 12 hazard categories using a 5-tier grading
+    scale (Poor -> Excellent). Results are embedded from the official v1.0
+    benchmark release covering 28+ models.
+    """
+
+    SAFETY_PROFILE_MAPPING = {
+        "Non-toxicity": ["hate", "sexual_content", "defamation"],
+        "Non-stereotype": ["defamation", "hate"],
+        "Adversarial robustness": ["violent_crimes", "nonviolent_crimes", "indiscriminate_weapons"],
+        "OOD robustness": ["specialized_advice", "intellectual_property"],
+        "Robustness to adversarial demos": ["sex_crimes", "child_exploitation", "suicide_self_harm"],
+        "Privacy": ["privacy"],
+        "Ethics": ["violent_crimes", "sex_crimes", "child_exploitation", "suicide_self_harm", "indiscriminate_weapons"],
+        "Fairness": ["hate", "defamation", "intellectual_property"],
+    }
+
+    def __init__(self) -> None:
+        from data.ailuminate_v1 import AILUMINATE_RESULTS, HAZARD_LABELS
+        self._data = AILUMINATE_RESULTS
+        self._labels = HAZARD_LABELS
+
+    def fetch(self, limit_models: int = 50) -> list[BenchmarkResult]:
+        results: list[BenchmarkResult] = []
+
+        for entry in self._data[:limit_models]:
+            model_name = entry["model_name"]
+            hazard_scores: dict = entry.get("hazard_scores", {})
+
+            for profile_metric, hazard_keys in self.SAFETY_PROFILE_MAPPING.items():
+                vals = [hazard_scores[k] for k in hazard_keys if k in hazard_scores]
+                if not vals:
+                    continue
+                score = round(sum(vals) / len(vals), 1)
+                results.append(
+                    BenchmarkResult(
+                        model_name=model_name,
+                        source=BenchmarkSource.AILUMINATE.value,
+                        safety_score=score,
+                        metric=profile_metric,
+                        raw_score=score,
+                        score_scale="0-100",
+                    )
+                )
+
+            for hazard_key, label in self._labels.items():
+                if hazard_key in hazard_scores:
+                    results.append(
+                        BenchmarkResult(
+                            model_name=model_name,
+                            source=BenchmarkSource.AILUMINATE.value,
+                            safety_score=float(hazard_scores[hazard_key]),
+                            metric=label,
+                            raw_score=float(hazard_scores[hazard_key]),
+                            score_scale="0-100",
+                        )
+                    )
+
+            all_scores = [float(v) for v in hazard_scores.values()]
+            if all_scores:
+                avg = round(sum(all_scores) / len(all_scores), 1)
+                results.append(
+                    BenchmarkResult(
+                        model_name=model_name,
+                        source=BenchmarkSource.AILUMINATE.value,
+                        safety_score=avg,
+                        metric="Safety Average",
+                        raw_score=None,
+                        score_scale="0-100",
+                    )
+                )
+
+        return results
+
+
+class CalypsoAIFetcher:
+    """Serve CalypsoAI Security Index (CASI) and Agentic Warfare Resistance (AWR)
+    benchmark results.
+
+    Source: https://calypsoai.com/calypsoai-model-leaderboard/
+    CASI measures resistance to prompt injection and jailbreak attacks (0-100).
+    AWR measures resistance to multi-step agentic attack scenarios (0-100).
+    Data reflects Sep 2025 edition with historical editions Feb-Sep 2025.
+    """
+
+    def __init__(self) -> None:
+        from data.calypsoai_casi import CALYPSOAI_RESULTS
+        self._data = CALYPSOAI_RESULTS
+
+    def fetch(self, limit_models: int = 50) -> list[BenchmarkResult]:
+        results: list[BenchmarkResult] = []
+        source = BenchmarkSource.CALYPSOAI.value
+
+        for entry in self._data[:limit_models]:
+            model_name = entry["model_name"]
+            casi = entry.get("casi_score")
+            awr = entry.get("awr_score")
+            perf = entry.get("performance_index")
+
+            if casi is not None and math.isfinite(float(casi)):
+                results.append(BenchmarkResult(
+                    model_name=model_name,
+                    source=source,
+                    safety_score=float(casi),
+                    metric="CASI (Jailbreak & Injection Resistance)",
+                    raw_score=float(casi),
+                    score_scale="0-100",
+                ))
+
+            if awr is not None and math.isfinite(float(awr)):
+                results.append(BenchmarkResult(
+                    model_name=model_name,
+                    source=source,
+                    safety_score=float(awr),
+                    metric="AWR (Agentic Warfare Resistance)",
+                    raw_score=float(awr),
+                    score_scale="0-100",
+                ))
+
+            if casi is not None and awr is not None:
+                avg = round((float(casi) + float(awr)) / 2, 1)
+                results.append(BenchmarkResult(
+                    model_name=model_name,
+                    source=source,
+                    safety_score=avg,
+                    metric="Safety Average",
+                    raw_score=None,
+                    score_scale="0-100",
+                ))
+
+        return results
+
+
+class PhareFetcher:
+    """Serve Phare (Giskard AI) multilingual safety benchmark results.
+
+    Source: https://phare.giskard.ai/
+    Evaluates LLMs across: factuality, bias, harmfulness, jailbreak resistance,
+    and prompt injection resistance. Scores are 0-100, higher is better.
+    Data reflects January 2026 leaderboard update.
+    """
+
+    METRIC_WEIGHTS = {
+        "factuality": 0.15,
+        "bias": 0.15,
+        "harmfulness": 0.25,
+        "jailbreak_encoding": 0.20,
+        "jailbreak_framing": 0.15,
+        "prompt_injection": 0.10,
+    }
+
+    def __init__(self) -> None:
+        from data.phare_giskard import PHARE_RESULTS, PHARE_SCORE_LABELS
+        self._data = PHARE_RESULTS
+        self._labels = PHARE_SCORE_LABELS
+
+    def fetch(self, limit_models: int = 50) -> list[BenchmarkResult]:
+        results: list[BenchmarkResult] = []
+        source = BenchmarkSource.PHARE.value
+
+        for entry in self._data[:limit_models]:
+            model_name = entry["model_name"]
+            scores = entry.get("scores", {})
+
+            weighted_sum = 0.0
+            weight_total = 0.0
+            for key, label in self._labels.items():
+                val = scores.get(key)
+                if val is None or not math.isfinite(float(val)):
+                    continue
+                score = float(val)
+                results.append(BenchmarkResult(
+                    model_name=model_name,
+                    source=source,
+                    safety_score=score,
+                    metric=label,
+                    raw_score=score,
+                    score_scale="0-100",
+                ))
+                w = self.METRIC_WEIGHTS.get(key, 1.0)
+                weighted_sum += score * w
+                weight_total += w
+
+            if weight_total > 0:
+                avg = round(weighted_sum / weight_total, 1)
+                results.append(BenchmarkResult(
+                    model_name=model_name,
+                    source=source,
+                    safety_score=avg,
+                    metric="Safety Average",
+                    raw_score=None,
+                    score_scale="0-100",
+                ))
+
+        return results
+
+
 # --- Aggregator Service ---
 
 
 class BenchmarkAggregator:
     def __init__(self):
         self.hf = HuggingFaceSafetyFetcher()
+        self.ailuminate = AILuminateFetcher()
+        self.calypsoai = CalypsoAIFetcher()
+        self.phare = PhareFetcher()
 
     def aggregate_benchmarks(
         self,
@@ -209,9 +415,19 @@ class BenchmarkAggregator:
         sort_by: str = "safety_score",
         sort_desc: bool = True,
     ) -> list[BenchmarkResult]:
-        fetch_hf = sources is None or "huggingface" in [s.lower() for s in sources]
+        source_lower = [s.lower() for s in sources] if sources else None
+        fetch_hf = source_lower is None or "huggingface" in source_lower
+        fetch_ai = source_lower is None or "ailuminate" in source_lower
+        fetch_casi = source_lower is None or "calypsoai" in source_lower or "casi" in source_lower
+        fetch_phare = source_lower is None or "phare" in source_lower or "giskard" in source_lower
 
         all_results: list[BenchmarkResult] = []
+        if fetch_ai:
+            all_results.extend(self.ailuminate.fetch(limit_models=limit_per_source))
+        if fetch_casi:
+            all_results.extend(self.calypsoai.fetch(limit_models=limit_per_source))
+        if fetch_phare:
+            all_results.extend(self.phare.fetch(limit_models=limit_per_source))
         if fetch_hf:
             all_results.extend(self.hf.fetch(limit_models=limit_per_source))
 

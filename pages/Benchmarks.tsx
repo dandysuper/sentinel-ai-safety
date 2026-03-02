@@ -11,10 +11,10 @@ export const Benchmarks: React.FC = () => {
       <div className="flex flex-col gap-2">
         <div className="flex items-center gap-2">
           <BookOpen className="w-5 h-5 text-slate-700" />
-          <h1 className="text-2xl font-bold text-slate-900">Safety & Bias Benchmarks</h1>
+          <h1 className="text-2xl font-bold text-slate-900">Бенчмарки безопасности и предвзятости</h1>
         </div>
         <p className="text-slate-500">
-          Live-parsed list of widely used open datasets for LLM safety evaluation.
+          Актуальный список широко используемых открытых наборов данных для оценки безопасности LLM.
         </p>
         <a
           className="inline-flex items-center gap-2 text-sm text-blue-600 hover:text-blue-700"
@@ -22,20 +22,20 @@ export const Benchmarks: React.FC = () => {
           target="_blank"
           rel="noreferrer"
         >
-          Source: promptfoo.dev <ExternalLink className="w-4 h-4" />
+          Источник: promptfoo.dev <ExternalLink className="w-4 h-4" />
         </a>
       </div>
 
       {isLoading && (
         <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm flex items-center gap-3 text-slate-600">
           <Loader2 className="w-5 h-5 animate-spin" />
-          Fetching benchmark list...
+          Загрузка списка бенчмарков...
         </div>
       )}
 
       {error && (
         <div className="bg-rose-50 border border-rose-200 rounded-xl p-6 text-rose-800">
-          Failed to fetch the benchmark list from the web.
+          Не удалось загрузить список бенчмарков из сети.
         </div>
       )}
 
@@ -49,7 +49,7 @@ export const Benchmarks: React.FC = () => {
               <div className="flex items-start justify-between gap-4">
                 <div>
                   <div className="text-xs uppercase tracking-wider font-semibold text-slate-400">
-                    Dataset #{d.rank}
+                    Набор данных #{d.rank}
                   </div>
                   <h3 className="text-lg font-semibold text-slate-900 mt-1">{d.title}</h3>
                 </div>
@@ -59,7 +59,7 @@ export const Benchmarks: React.FC = () => {
                   href={d.url}
                   target="_blank"
                   rel="noreferrer"
-                  title="Open section"
+                  title="Открыть раздел"
                 >
                   <ExternalLink className="w-5 h-5" />
                 </a>
@@ -83,7 +83,7 @@ export const Benchmarks: React.FC = () => {
               {d.links.length > 0 && (
                 <div className="mt-4 pt-4 border-t border-slate-200">
                   <div className="text-xs uppercase tracking-wider font-semibold text-slate-400 mb-2">
-                    Key Links
+                    Основные ссылки
                   </div>
                   <div className="space-y-1 text-sm">
                     {d.links.map((l) => (
