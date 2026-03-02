@@ -1,18 +1,18 @@
 from __future__ import annotations
 
-from pathlib import Path
-from typing import Optional
-import os
 import logging
 import math
+import os
+from enum import Enum
+from pathlib import Path
+from typing import Optional
 
 import requests
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
-from enum import Enum
-
+from fastapi.responses import FileResponse
 from huggingface_hub import HfApi
+from pydantic import BaseModel
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -120,7 +120,9 @@ class HuggingFaceSafetyFetcher:
 
     def fetch(self, limit_models: int = 50) -> list[BenchmarkResult]:
         try:
-            files = self.api.list_repo_files(repo_id=self.DATASET_ID, repo_type="dataset")
+            files = self.api.list_repo_files(
+                repo_id=self.DATASET_ID, repo_type="dataset"
+            )
 
             # pick latest results_*.json per model folder
             by_folder: dict[str, str] = {}
@@ -151,7 +153,11 @@ class HuggingFaceSafetyFetcher:
 
                 data = r.json()
                 config = data.get("config", {}) or {}
-                model_name = config.get("model_name") or data.get("model_name") or file_path.split("/")[0]
+                model_name = (
+                    config.get("model_name")
+                    or data.get("model_name")
+                    or file_path.split("/")[0]
+                )
 
                 per = data.get("results", {}) or {}
                 if not isinstance(per, dict):
@@ -163,9 +169,13 @@ class HuggingFaceSafetyFetcher:
                     if not isinstance(item, dict):
                         continue
                     raw = item.get("aggregated-results")
-                    if not isinstance(raw, (int, float)) or not math.isfinite(float(raw)):
+                    if not isinstance(raw, (int, float)) or not math.isfinite(
+                        float(raw)
+                    ):
                         continue
-                    score = self.normalizer.normalize(float(raw), custom_range=(0.0, 1.0))
+                    score = self.normalizer.normalize(
+                        float(raw), custom_range=(0.0, 1.0)
+                    )
                     scores.append(score)
                     results.append(
                         BenchmarkResult(
@@ -210,16 +220,31 @@ class AILuminateFetcher:
     SAFETY_PROFILE_MAPPING = {
         "Non-toxicity": ["hate", "sexual_content", "defamation"],
         "Non-stereotype": ["defamation", "hate"],
-        "Adversarial robustness": ["violent_crimes", "nonviolent_crimes", "indiscriminate_weapons"],
+        "Adversarial robustness": [
+            "violent_crimes",
+            "nonviolent_crimes",
+            "indiscriminate_weapons",
+        ],
         "OOD robustness": ["specialized_advice", "intellectual_property"],
-        "Robustness to adversarial demos": ["sex_crimes", "child_exploitation", "suicide_self_harm"],
+        "Robustness to adversarial demos": [
+            "sex_crimes",
+            "child_exploitation",
+            "suicide_self_harm",
+        ],
         "Privacy": ["privacy"],
-        "Ethics": ["violent_crimes", "sex_crimes", "child_exploitation", "suicide_self_harm", "indiscriminate_weapons"],
+        "Ethics": [
+            "violent_crimes",
+            "sex_crimes",
+            "child_exploitation",
+            "suicide_self_harm",
+            "indiscriminate_weapons",
+        ],
         "Fairness": ["hate", "defamation", "intellectual_property"],
     }
 
     def __init__(self) -> None:
         from data.ailuminate_v1 import AILUMINATE_RESULTS, HAZARD_LABELS
+
         self._data = AILUMINATE_RESULTS
         self._labels = HAZARD_LABELS
 
@@ -288,6 +313,7 @@ class CalypsoAIFetcher:
 
     def __init__(self) -> None:
         from data.calypsoai_casi import CALYPSOAI_RESULTS
+
         self._data = CALYPSOAI_RESULTS
 
     def fetch(self, limit_models: int = 50) -> list[BenchmarkResult]:
@@ -301,35 +327,41 @@ class CalypsoAIFetcher:
             perf = entry.get("performance_index")
 
             if casi is not None and math.isfinite(float(casi)):
-                results.append(BenchmarkResult(
-                    model_name=model_name,
-                    source=source,
-                    safety_score=float(casi),
-                    metric="CASI (Jailbreak & Injection Resistance)",
-                    raw_score=float(casi),
-                    score_scale="0-100",
-                ))
+                results.append(
+                    BenchmarkResult(
+                        model_name=model_name,
+                        source=source,
+                        safety_score=float(casi),
+                        metric="CASI (Jailbreak & Injection Resistance)",
+                        raw_score=float(casi),
+                        score_scale="0-100",
+                    )
+                )
 
             if awr is not None and math.isfinite(float(awr)):
-                results.append(BenchmarkResult(
-                    model_name=model_name,
-                    source=source,
-                    safety_score=float(awr),
-                    metric="AWR (Agentic Warfare Resistance)",
-                    raw_score=float(awr),
-                    score_scale="0-100",
-                ))
+                results.append(
+                    BenchmarkResult(
+                        model_name=model_name,
+                        source=source,
+                        safety_score=float(awr),
+                        metric="AWR (Agentic Warfare Resistance)",
+                        raw_score=float(awr),
+                        score_scale="0-100",
+                    )
+                )
 
             if casi is not None and awr is not None:
                 avg = round((float(casi) + float(awr)) / 2, 1)
-                results.append(BenchmarkResult(
-                    model_name=model_name,
-                    source=source,
-                    safety_score=avg,
-                    metric="Safety Average",
-                    raw_score=None,
-                    score_scale="0-100",
-                ))
+                results.append(
+                    BenchmarkResult(
+                        model_name=model_name,
+                        source=source,
+                        safety_score=avg,
+                        metric="Safety Average",
+                        raw_score=None,
+                        score_scale="0-100",
+                    )
+                )
 
         return results
 
@@ -354,6 +386,7 @@ class PhareFetcher:
 
     def __init__(self) -> None:
         from data.phare_giskard import PHARE_RESULTS, PHARE_SCORE_LABELS
+
         self._data = PHARE_RESULTS
         self._labels = PHARE_SCORE_LABELS
 
@@ -372,28 +405,32 @@ class PhareFetcher:
                 if val is None or not math.isfinite(float(val)):
                     continue
                 score = float(val)
-                results.append(BenchmarkResult(
-                    model_name=model_name,
-                    source=source,
-                    safety_score=score,
-                    metric=label,
-                    raw_score=score,
-                    score_scale="0-100",
-                ))
+                results.append(
+                    BenchmarkResult(
+                        model_name=model_name,
+                        source=source,
+                        safety_score=score,
+                        metric=label,
+                        raw_score=score,
+                        score_scale="0-100",
+                    )
+                )
                 w = self.METRIC_WEIGHTS.get(key, 1.0)
                 weighted_sum += score * w
                 weight_total += w
 
             if weight_total > 0:
                 avg = round(weighted_sum / weight_total, 1)
-                results.append(BenchmarkResult(
-                    model_name=model_name,
-                    source=source,
-                    safety_score=avg,
-                    metric="Safety Average",
-                    raw_score=None,
-                    score_scale="0-100",
-                ))
+                results.append(
+                    BenchmarkResult(
+                        model_name=model_name,
+                        source=source,
+                        safety_score=avg,
+                        metric="Safety Average",
+                        raw_score=None,
+                        score_scale="0-100",
+                    )
+                )
 
         return results
 
@@ -418,8 +455,14 @@ class BenchmarkAggregator:
         source_lower = [s.lower() for s in sources] if sources else None
         fetch_hf = source_lower is None or "huggingface" in source_lower
         fetch_ai = source_lower is None or "ailuminate" in source_lower
-        fetch_casi = source_lower is None or "calypsoai" in source_lower or "casi" in source_lower
-        fetch_phare = source_lower is None or "phare" in source_lower or "giskard" in source_lower
+        fetch_casi = (
+            source_lower is None
+            or "calypsoai" in source_lower
+            or "casi" in source_lower
+        )
+        fetch_phare = (
+            source_lower is None or "phare" in source_lower or "giskard" in source_lower
+        )
 
         all_results: list[BenchmarkResult] = []
         if fetch_ai:
@@ -432,7 +475,12 @@ class BenchmarkAggregator:
             all_results.extend(self.hf.fetch(limit_models=limit_per_source))
 
         # Drop any non-finite scores to avoid JSON serialization errors
-        all_results = [r for r in all_results if isinstance(r.safety_score, (int, float)) and math.isfinite(r.safety_score)]
+        all_results = [
+            r
+            for r in all_results
+            if isinstance(r.safety_score, (int, float))
+            and math.isfinite(r.safety_score)
+        ]
 
         if not all_results:
             return []
@@ -485,7 +533,9 @@ async def test_settings():
         headers = {"Accept": "application/json"}
         if token:
             headers["Authorization"] = f"Bearer {token}"
-        r = requests.get("https://huggingface.co/api/whoami-v2", headers=headers, timeout=20)
+        r = requests.get(
+            "https://huggingface.co/api/whoami-v2", headers=headers, timeout=20
+        )
         return {"ok": r.status_code == 200, "status": r.status_code}
     except Exception as e:
         return {"ok": False, "error": str(e)}
@@ -508,12 +558,38 @@ async def get_benchmarks(
         )
     except Exception as e:
         logger.error(f"Error fetching benchmarks: {e}")
-        raise HTTPException(status_code=500, detail=f"Failed to fetch benchmarks: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Failed to fetch benchmarks: {str(e)}"
+        )
 
 
 @app.get("/api/health")
 async def health_check():
     return {"status": "healthy", "version": "1.0.0"}
+
+
+# --- Static file serving (React SPA) ---
+# dist/ is placed one level above backend/ in the Docker image: /app/dist/
+DIST_DIR = Path(__file__).resolve().parent.parent / "dist"
+
+
+@app.get("/{full_path:path}", include_in_schema=False)
+async def serve_frontend(full_path: str):
+    """Serve the built React SPA for all non-API routes."""
+    if not DIST_DIR.exists():
+        return {"error": "Frontend not built. Run: npm run build"}
+
+    # Serve real static files (JS, CSS, images, favicon, etc.) directly
+    static_file = DIST_DIR / full_path
+    if full_path and static_file.is_file():
+        return FileResponse(str(static_file))
+
+    # Fall back to index.html so React Router handles the route client-side
+    index_file = DIST_DIR / "index.html"
+    if index_file.exists():
+        return FileResponse(str(index_file))
+
+    raise HTTPException(status_code=404, detail="Not found")
 
 
 if __name__ == "__main__":

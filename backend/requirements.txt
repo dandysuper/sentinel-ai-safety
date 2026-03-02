@@ -13,5 +13,8 @@ huggingface-hub>=0.20.0
 # HTTP Client
 requests>=2.31.0
 
+# Async file I/O (required by FastAPI FileResponse for serving static files)
+aiofiles>=23.2.0
+
 # Type validation
 pydantic>=2.6.0

@@ -1,0 +1,41 @@
+# Node
+node_modules/
+npm-debug.log*
+
+# Built frontend (will be built inside Docker)
+dist/
+dist-ssr/
+
+# Python virtual environments
+.venv/
+backend/.venv/
+__pycache__/
+backend/__pycache__/
+*.py[cod]
+*.pyo
+
+# Git
+.git/
+.gitignore
+
+# Editor
+.vscode/
+.idea/
+*.suo
+*.sw?
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Local env files
+*.local
+.env
+.env.*
+
+# Vercel
+.vercel
+
+# Logs
+logs/
+*.log

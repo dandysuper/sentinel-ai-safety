@@ -3,3 +3,6 @@ uvicorn[standard]>=0.27.0
 huggingface-hub>=0.20.0
 requests>=2.31.0
 pydantic>=2.6.0
+
+# Async file I/O (required by FastAPI FileResponse for serving static files)
+aiofiles>=23.2.0
