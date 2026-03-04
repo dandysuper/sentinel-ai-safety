@@ -54,10 +54,10 @@ export const Comparison: React.FC = () => {
       {/* ── Header ── */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-xl sm:text-2xl font-bold text-slate-900">
+          <h1 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">
             Сравнение безопасности
           </h1>
-          <p className="text-sm text-slate-500 mt-0.5">
+          <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">
             Сравните до 3 моделей рядом.
           </p>
         </div>
@@ -65,7 +65,7 @@ export const Comparison: React.FC = () => {
         {selectedIds.length < 3 && (
           <div className="relative w-full sm:w-auto">
             <select
-              className="w-full sm:w-auto appearance-none bg-white border border-slate-300 text-slate-700 py-2.5 pl-4 pr-10 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent cursor-pointer"
+              className="w-full sm:w-auto appearance-none bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 py-2.5 pl-4 pr-10 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent cursor-pointer"
               onChange={handleAddModel}
               defaultValue=""
             >
@@ -88,7 +88,7 @@ export const Comparison: React.FC = () => {
       </div>
 
       {error && (
-        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 text-amber-900 text-sm">
+        <div className="bg-amber-50 dark:bg-amber-950 border border-amber-200 dark:border-amber-800 rounded-lg p-4 text-amber-900 dark:text-amber-200 text-sm">
           Не удалось загрузить данные моделей.
         </div>
       )}
@@ -120,15 +120,15 @@ export const Comparison: React.FC = () => {
           {selectedModels.map((model) => (
             <div
               key={model.id}
-              className="bg-white rounded-xl border border-slate-200 shadow-sm flex flex-col"
+              className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col"
             >
               {/* Card header */}
-              <div className="p-4 sm:p-6 border-b border-slate-100 flex items-start justify-between gap-3">
+              <div className="p-4 sm:p-6 border-b border-slate-100 dark:border-slate-700 flex items-start justify-between gap-3">
                 <div className="min-w-0">
-                  <h3 className="text-base sm:text-xl font-bold text-slate-900 truncate">
+                  <h3 className="text-base sm:text-xl font-bold text-slate-900 dark:text-white truncate">
                     {model.name}
                   </h3>
-                  <p className="text-xs sm:text-sm text-slate-500 truncate">
+                  <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 truncate">
                     {model.developer}
                   </p>
                   <span
@@ -154,7 +154,7 @@ export const Comparison: React.FC = () => {
               <div className="p-4 sm:p-6 flex-1 space-y-5 sm:space-y-6">
                 {/* Aggregate score */}
                 <div className="flex justify-between items-center">
-                  <span className="text-sm font-medium text-slate-500">
+                  <span className="text-sm font-medium text-slate-500 dark:text-slate-400">
                     Суммарный балл
                   </span>
                   <ScoreBadge score={model.aggregateScore} size="lg" />
@@ -162,7 +162,7 @@ export const Comparison: React.FC = () => {
 
                 {/* Metric bars */}
                 <div className="space-y-2.5">
-                  <h4 className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                  <h4 className="text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
                     Метрики
                   </h4>
                   {metrics.map(({ label, key }) => {
@@ -170,12 +170,12 @@ export const Comparison: React.FC = () => {
                     return (
                       <div key={key}>
                         <div className="flex justify-between text-xs sm:text-sm mb-1">
-                          <span className="text-slate-600">{label}</span>
-                          <span className="font-mono text-slate-900 font-medium">
+                          <span className="text-slate-600 dark:text-slate-400">{label}</span>
+                          <span className="font-mono text-slate-900 dark:text-slate-100 font-medium">
                             {val}
                           </span>
                         </div>
-                        <div className="h-1.5 sm:h-2 bg-slate-100 rounded-full overflow-hidden">
+                        <div className="h-1.5 sm:h-2 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
                           <div
                             className={`h-full rounded-full transition-all duration-500 ${
                               val >= 80
@@ -211,7 +211,7 @@ export const Comparison: React.FC = () => {
       {selectedModels.length > 0 && selectedModels.length < 3 && (
         <div className="relative w-full sm:hidden">
           <select
-            className="w-full appearance-none bg-white border border-dashed border-slate-300 text-slate-500 py-3 pl-4 pr-10 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
+            className="w-full appearance-none bg-white dark:bg-slate-800 border border-dashed border-slate-300 dark:border-slate-600 text-slate-500 dark:text-slate-400 py-3 pl-4 pr-10 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
             onChange={handleAddModel}
             defaultValue=""
           >

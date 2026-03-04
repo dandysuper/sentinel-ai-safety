@@ -44,7 +44,7 @@ export const ModelDetail: React.FC = () => {
     }
     return (
       <div className="p-10 text-center">
-        <h2 className="text-xl font-bold text-slate-800">Модель не найдена</h2>
+        <h2 className="text-xl font-bold text-slate-800 dark:text-slate-200">Модель не найдена</h2>
         <Link
           to="/"
           className="text-blue-600 hover:underline mt-4 inline-block"
@@ -77,12 +77,12 @@ export const ModelDetail: React.FC = () => {
       </Link>
 
       {/* ── Header card ── */}
-      <div className="bg-white rounded-xl border border-slate-200 p-4 sm:p-6 shadow-sm">
+      <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4 sm:p-6 shadow-sm">
         {/* Top row: name + badge */}
         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-2">
-              <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 break-words">
+              <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white break-words">
                 {model.name}
               </h1>
               <span
@@ -95,9 +95,9 @@ export const ModelDetail: React.FC = () => {
                 {model.type === "Open" ? "Открытый" : "Закрытый"} источник
               </span>
             </div>
-            <p className="text-sm text-slate-500 mt-1">
+            <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
               Разработчик:{" "}
-              <span className="font-medium text-slate-700">
+              <span className="font-medium text-slate-700 dark:text-slate-300">
                 {model.developer}
               </span>
               {model.params !== "Неизвестно" && (
@@ -109,14 +109,14 @@ export const ModelDetail: React.FC = () => {
           {/* Score + trend */}
           <div className="flex items-center gap-4 sm:gap-6 flex-shrink-0">
             <div>
-              <div className="text-xs text-slate-400 uppercase tracking-wider font-semibold mb-1">
+              <div className="text-xs text-slate-400 dark:text-slate-500 uppercase tracking-wider font-semibold mb-1">
                 Балл безопасности
               </div>
               <ScoreBadge score={model.aggregateScore} size="lg" />
             </div>
             <div className="hidden sm:block h-10 w-px bg-slate-200" />
             <div className="hidden sm:block">
-              <div className="text-xs text-slate-400 uppercase tracking-wider font-semibold mb-1">
+              <div className="text-xs text-slate-400 dark:text-slate-500 uppercase tracking-wider font-semibold mb-1">
                 Тренд
               </div>
               <Sparkline data={model.trend} />
@@ -125,7 +125,7 @@ export const ModelDetail: React.FC = () => {
         </div>
 
         {/* Mobile trend row */}
-        <div className="sm:hidden mt-3 pt-3 border-t border-slate-100 flex items-center gap-3">
+        <div className="sm:hidden mt-3 pt-3 border-t border-slate-100 dark:border-slate-700 flex items-center gap-3">
           <span className="text-xs text-slate-400 font-medium uppercase tracking-wider">
             Тренд 7 дней
           </span>
@@ -138,8 +138,8 @@ export const ModelDetail: React.FC = () => {
         {/* Left / main column: radar + sources */}
         <div className="lg:col-span-2 space-y-4 sm:space-y-6">
           {/* Radar chart */}
-          <div className="bg-white rounded-xl border border-slate-200 p-4 sm:p-6 shadow-sm">
-            <h3 className="text-base sm:text-lg font-semibold text-slate-800 mb-4 sm:mb-6">
+          <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4 sm:p-6 shadow-sm">
+            <h3 className="text-base sm:text-lg font-semibold text-slate-800 dark:text-slate-200 mb-4 sm:mb-6">
               Профиль безопасности
             </h3>
 
@@ -171,20 +171,20 @@ export const ModelDetail: React.FC = () => {
           </div>
 
           {/* Metric bars — mobile-friendly alternative view */}
-          <div className="bg-white rounded-xl border border-slate-200 p-4 sm:p-6 shadow-sm lg:hidden">
-            <h3 className="text-base font-semibold text-slate-800 mb-4">
+          <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4 sm:p-6 shadow-sm lg:hidden">
+            <h3 className="text-base font-semibold text-slate-800 dark:text-slate-200 mb-4">
               Метрики безопасности
             </h3>
             <div className="space-y-3">
               {metrics.map((m) => (
                 <div key={m.label}>
                   <div className="flex justify-between text-sm mb-1">
-                    <span className="text-slate-600">{m.label}</span>
-                    <span className="font-mono text-slate-900 font-medium">
+                    <span className="text-slate-600 dark:text-slate-400">{m.label}</span>
+                    <span className="font-mono text-slate-900 dark:text-slate-100 font-medium">
                       {m.val}
                     </span>
                   </div>
-                  <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
+                  <div className="h-2 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
                     <div
                       className={`h-full rounded-full transition-all duration-500 ${
                         m.val >= 80
@@ -204,13 +204,13 @@ export const ModelDetail: React.FC = () => {
           </div>
 
           {/* Sources table */}
-          <div className="bg-white rounded-xl border border-slate-200 p-4 sm:p-6 shadow-sm">
-            <h3 className="text-base sm:text-lg font-semibold text-slate-800 mb-4">
+          <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4 sm:p-6 shadow-sm">
+            <h3 className="text-base sm:text-lg font-semibold text-slate-800 dark:text-slate-200 mb-4">
               Разбивка по источникам
             </h3>
-            <div className="overflow-x-auto -mx-4 sm:mx-0 rounded-none sm:rounded-lg border-y sm:border border-slate-200">
+            <div className="overflow-x-auto -mx-4 sm:mx-0 rounded-none sm:rounded-lg border-y sm:border border-slate-200 dark:border-slate-700">
               <table className="w-full text-left text-sm min-w-[420px]">
-                <thead className="bg-slate-50 text-slate-500">
+                <thead className="bg-slate-50 dark:bg-slate-800 text-slate-500 dark:text-slate-400">
                   <tr>
                     <th className="p-3 font-medium">Источник</th>
                     <th className="p-3 font-medium">Метрика</th>
@@ -220,17 +220,17 @@ export const ModelDetail: React.FC = () => {
                     <th className="p-3 font-medium hidden sm:table-cell" />
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-slate-100 dark:divide-slate-700">
                   {model.sources.length > 0 ? (
                     model.sources.map((src, idx) => (
                       <tr
                         key={idx}
-                        className="hover:bg-slate-50 transition-colors"
+                        className="hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
                       >
-                        <td className="p-3 text-slate-900 font-medium whitespace-nowrap">
+                        <td className="p-3 text-slate-900 dark:text-slate-100 font-medium whitespace-nowrap">
                           {src.source}
                         </td>
-                        <td className="p-3 text-slate-600 max-w-[180px] truncate">
+                        <td className="p-3 text-slate-600 dark:text-slate-400 max-w-[180px] truncate">
                           {src.metric}
                         </td>
                         <td className="p-3 text-right font-mono whitespace-nowrap">
@@ -270,20 +270,20 @@ export const ModelDetail: React.FC = () => {
         {/* Right column: AI analysis + details */}
         <div className="space-y-4 sm:space-y-6">
           {/* Metric bars — desktop only (mobile shows them above) */}
-          <div className="hidden lg:block bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
-            <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-4">
+          <div className="hidden lg:block bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-5 shadow-sm">
+            <h3 className="text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-4">
               Метрики
             </h3>
             <div className="space-y-3">
               {metrics.map((m) => (
                 <div key={m.label}>
                   <div className="flex justify-between text-sm mb-1">
-                    <span className="text-slate-600">{m.label}</span>
-                    <span className="font-mono text-slate-900 font-medium">
+                    <span className="text-slate-600 dark:text-slate-400">{m.label}</span>
+                    <span className="font-mono text-slate-900 dark:text-slate-100 font-medium">
                       {m.val}
                     </span>
                   </div>
-                  <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                  <div className="h-1.5 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
                     <div
                       className={`h-full rounded-full transition-all duration-500 ${
                         m.val >= 80
@@ -303,17 +303,17 @@ export const ModelDetail: React.FC = () => {
           </div>
 
           {/* Gemini AI Analyst */}
-          <div className="bg-gradient-to-b from-indigo-50 to-white rounded-xl border border-indigo-100 p-4 sm:p-6 shadow-sm">
+          <div className="bg-gradient-to-b from-indigo-50 to-white dark:from-indigo-950 dark:to-slate-800 rounded-xl border border-indigo-100 dark:border-indigo-900 p-4 sm:p-6 shadow-sm">
             <div className="flex items-center gap-2 mb-4">
               <Bot className="w-5 h-5 text-indigo-600 flex-shrink-0" />
-              <h3 className="text-base sm:text-lg font-semibold text-indigo-900">
+              <h3 className="text-base sm:text-lg font-semibold text-indigo-900 dark:text-indigo-300">
                 ИИ-аналитик безопасности
               </h3>
             </div>
 
             {!analysis ? (
               <div className="text-center py-6 sm:py-8">
-                <p className="text-indigo-800/70 text-sm mb-4">
+                <p className="text-indigo-800/70 dark:text-indigo-300/70 text-sm mb-4">
                   Сгенерировать качественный анализ с помощью Gemini Flash.
                 </p>
                 <button
@@ -351,7 +351,7 @@ export const ModelDetail: React.FC = () => {
               </div>
             ) : (
               <div>
-                <div className="prose prose-sm prose-indigo text-slate-700 space-y-2">
+                <div className="prose prose-sm prose-indigo text-slate-700 dark:text-slate-300 space-y-2">
                   {analysis
                     .split("\n")
                     .filter((p) => p.trim())
@@ -359,7 +359,7 @@ export const ModelDetail: React.FC = () => {
                       <p key={i}>{para}</p>
                     ))}
                 </div>
-                <div className="mt-4 pt-4 border-t border-indigo-100 flex items-center gap-2 text-xs text-indigo-500">
+                <div className="mt-4 pt-4 border-t border-indigo-100 dark:border-indigo-800 flex items-center gap-2 text-xs text-indigo-500 dark:text-indigo-400">
                   <CheckCircle className="w-3.5 h-3.5 flex-shrink-0" />
                   Анализ сгенерирован Gemini
                 </div>
@@ -375,42 +375,42 @@ export const ModelDetail: React.FC = () => {
           </div>
 
           {/* Details card */}
-          <div className="bg-white rounded-xl border border-slate-200 p-4 sm:p-6 shadow-sm">
-            <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-4">
+          <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4 sm:p-6 shadow-sm">
+            <h3 className="text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-4">
               Подробности
             </h3>
             <dl className="space-y-3 text-sm">
               <div className="flex justify-between gap-2">
-                <dt className="text-slate-500">Выпущена</dt>
-                <dd className="font-medium text-slate-900 text-right">
+                <dt className="text-slate-500 dark:text-slate-400">Выпущена</dt>
+                <dd className="font-medium text-slate-900 dark:text-slate-100 text-right">
                   {model.releaseDate}
                 </dd>
               </div>
               <div className="flex justify-between gap-2">
-                <dt className="text-slate-500">Лицензия</dt>
-                <dd className="font-medium text-slate-900 text-right">
+                <dt className="text-slate-500 dark:text-slate-400">Лицензия</dt>
+                <dd className="font-medium text-slate-900 dark:text-slate-100 text-right">
                   {model.license ||
                     (model.type === "Open" ? "Открытая" : "Проприетарная")}
                 </dd>
               </div>
               <div className="flex justify-between gap-2">
-                <dt className="text-slate-500">Параметры</dt>
-                <dd className="font-medium text-slate-900 text-right">
+                <dt className="text-slate-500 dark:text-slate-400">Параметры</dt>
+                <dd className="font-medium text-slate-900 dark:text-slate-100 text-right">
                   {model.params}
                 </dd>
               </div>
               <div className="flex justify-between gap-2">
-                <dt className="text-slate-500">Ранг</dt>
-                <dd className="font-medium text-slate-900 text-right">
+                <dt className="text-slate-500 dark:text-slate-400">Ранг</dt>
+                <dd className="font-medium text-slate-900 dark:text-slate-100 text-right">
                   #{model.rank}
                 </dd>
               </div>
             </dl>
             <div className="mt-5 grid grid-cols-2 gap-2">
-              <button className="border border-slate-200 rounded-md py-2 text-sm font-medium text-slate-600 hover:bg-slate-50 active:bg-slate-100 flex items-center justify-center gap-1.5 transition-colors">
+              <button className="border border-slate-200 dark:border-slate-600 rounded-md py-2 text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 active:bg-slate-100 dark:active:bg-slate-600 flex items-center justify-center gap-1.5 transition-colors">
                 <Share2 className="w-4 h-4" /> Поделиться
               </button>
-              <button className="border border-slate-200 rounded-md py-2 text-sm font-medium text-slate-600 hover:bg-slate-50 active:bg-slate-100 flex items-center justify-center gap-1.5 transition-colors">
+              <button className="border border-slate-200 dark:border-slate-600 rounded-md py-2 text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 active:bg-slate-100 dark:active:bg-slate-600 flex items-center justify-center gap-1.5 transition-colors">
                 <Download className="w-4 h-4" /> Экспорт
               </button>
             </div>

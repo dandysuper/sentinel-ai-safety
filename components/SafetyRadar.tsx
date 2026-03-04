@@ -1,6 +1,7 @@
 import React from 'react';
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer, Legend } from 'recharts';
 import { SafetyProfile } from '../types';
+import { useTheme } from '../hooks/useTheme';
 
 interface SafetyRadarProps {
   profile: SafetyProfile;
@@ -10,6 +11,8 @@ interface SafetyRadarProps {
 }
 
 export const SafetyRadar: React.FC<SafetyRadarProps> = ({ profile, compareProfile, name, compareName }) => {
+  const { resolved } = useTheme();
+  const isDark = resolved === 'dark';
   const data = [
     { subject: 'Нетоксичность', A: profile.nonToxicity, B: compareProfile?.nonToxicity, fullMark: 100 },
     { subject: 'Нестереотипность', A: profile.nonStereotype, B: compareProfile?.nonStereotype, fullMark: 100 },
@@ -24,8 +27,8 @@ export const SafetyRadar: React.FC<SafetyRadarProps> = ({ profile, compareProfil
   return (
     <ResponsiveContainer width="100%" height="100%">
       <RadarChart cx="50%" cy="50%" outerRadius="80%" data={data}>
-        <PolarGrid stroke="#e2e8f0" />
-        <PolarAngleAxis dataKey="subject" tick={{ fill: '#64748b', fontSize: 12 }} />
+        <PolarGrid stroke={isDark ? '#334155' : '#e2e8f0'} />
+        <PolarAngleAxis dataKey="subject" tick={{ fill: isDark ? '#94a3b8' : '#64748b', fontSize: 12 }} />
         <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
         <Radar name={name} dataKey="A" stroke="#2563eb" fill="#3b82f6" fillOpacity={0.3} />
         {compareProfile && (

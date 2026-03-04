@@ -60,14 +60,14 @@ export const Settings: React.FC = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">Настройки</h1>
-        <p className="text-slate-500">Настройка интеграций для получения бенчмарков безопасности.</p>
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Настройки</h1>
+        <p className="text-slate-500 dark:text-slate-400">Настройка интеграций для получения бенчмарков безопасности.</p>
       </div>
 
-      <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
+      <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-6 shadow-sm">
         <div className="flex items-center gap-2 mb-4">
-          <KeyRound className="w-5 h-5 text-slate-700" />
-          <h2 className="text-lg font-semibold text-slate-900">Токен Hugging Face</h2>
+          <KeyRound className="w-5 h-5 text-slate-700 dark:text-slate-300" />
+          <h2 className="text-lg font-semibold text-slate-900 dark:text-white">Токен Hugging Face</h2>
         </div>
 
         <div className="flex items-center gap-2 text-sm mb-4">
@@ -83,15 +83,15 @@ export const Settings: React.FC = () => {
         </div>
 
         <div className="space-y-3">
-          <label className="block text-sm font-medium text-slate-700">Вставьте HF-токен (Только чтение)</label>
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">Вставьте HF-токен (Только чтение)</label>
           <input
             type="password"
             value={token}
             onChange={(e) => setToken(e.target.value)}
             placeholder="hf_..."
-            className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-md text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-slate-500 dark:text-slate-400">
             Токен отправляется на сервер и хранится в <code>backend/.env.local</code>. Повторно не отображается.
           </p>
 

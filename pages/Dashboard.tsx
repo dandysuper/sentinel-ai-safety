@@ -86,14 +86,14 @@ export const Dashboard: React.FC = () => {
     <div className="space-y-4">
       {/* Search */}
       <div>
-        <label className="block text-xs font-medium text-slate-500 mb-1.5">
+        <label className="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1.5">
           Поиск модели
         </label>
         <div className="relative">
           <Search className="absolute left-2.5 top-2.5 w-4 h-4 text-slate-400" />
           <input
             type="text"
-            className="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full pl-9 pr-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-600 rounded-md text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="напр. GPT-4"
             value={filters.search}
             onChange={(e) => setFilters({ ...filters, search: e.target.value })}
@@ -111,10 +111,10 @@ export const Dashboard: React.FC = () => {
 
       {/* Type toggle */}
       <div>
-        <label className="block text-xs font-medium text-slate-500 mb-1.5">
+        <label className="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1.5">
           Тип доступа
         </label>
-        <div className="flex bg-slate-100 p-1 rounded-md">
+        <div className="flex bg-slate-100 dark:bg-slate-700 p-1 rounded-md">
           {(["All", "Open", "Closed"] as const).map((type) => {
             const labels: Record<string, string> = {
               All: "Все",
@@ -127,8 +127,8 @@ export const Dashboard: React.FC = () => {
                 onClick={() => setFilters({ ...filters, type })}
                 className={`flex-1 text-xs py-1.5 rounded-sm font-medium transition-colors ${
                   filters.type === type
-                    ? "bg-white text-slate-900 shadow-sm"
-                    : "text-slate-500 hover:text-slate-700"
+                    ? "bg-white dark:bg-slate-600 text-slate-900 dark:text-white shadow-sm"
+                    : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
                 }`}
               >
                 {labels[type]}
@@ -140,9 +140,9 @@ export const Dashboard: React.FC = () => {
 
       {/* Min score */}
       <div>
-        <label className="block text-xs font-medium text-slate-500 mb-1.5">
+        <label className="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1.5">
           Мин. балл безопасности:{" "}
-          <span className="font-semibold text-slate-700">
+          <span className="font-semibold text-slate-700 dark:text-slate-300">
             {filters.minScore}
           </span>
         </label>
@@ -155,7 +155,7 @@ export const Dashboard: React.FC = () => {
           onChange={(e) =>
             setFilters({ ...filters, minScore: parseInt(e.target.value) })
           }
-          className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
+          className="w-full h-2 bg-slate-200 dark:bg-slate-600 rounded-lg appearance-none cursor-pointer accent-blue-600"
         />
         <div className="flex justify-between text-xs text-slate-400 mt-1">
           <span>0</span>
@@ -179,12 +179,12 @@ export const Dashboard: React.FC = () => {
     <div className="space-y-4 sm:space-y-8">
       {/* Hero Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-        <div className="bg-gradient-to-br from-emerald-50 to-white border border-emerald-100 rounded-xl p-4 sm:p-6 shadow-sm flex items-center justify-between">
+        <div className="bg-gradient-to-br from-emerald-50 to-white dark:from-emerald-950 dark:to-slate-800 border border-emerald-100 dark:border-emerald-900 rounded-xl p-4 sm:p-6 shadow-sm flex items-center justify-between">
           <div className="min-w-0 flex-1 mr-4">
-            <h3 className="text-emerald-800 font-semibold uppercase tracking-wider text-xs mb-1">
+            <h3 className="text-emerald-800 dark:text-emerald-400 font-semibold uppercase tracking-wider text-xs mb-1">
               Самая безопасная модель
             </h3>
-            <div className="text-lg sm:text-2xl font-bold text-slate-900 truncate">
+            <div className="text-lg sm:text-2xl font-bold text-slate-900 dark:text-white truncate">
               {topSafe?.name || (isLoading ? "Загрузка..." : "—")}
             </div>
             <div className="text-sm text-slate-500 truncate">
@@ -199,12 +199,12 @@ export const Dashboard: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-gradient-to-br from-rose-50 to-white border border-rose-100 rounded-xl p-4 sm:p-6 shadow-sm flex items-center justify-between">
+        <div className="bg-gradient-to-br from-rose-50 to-white dark:from-rose-950 dark:to-slate-800 border border-rose-100 dark:border-rose-900 rounded-xl p-4 sm:p-6 shadow-sm flex items-center justify-between">
           <div className="min-w-0 flex-1 mr-4">
-            <h3 className="text-rose-800 font-semibold uppercase tracking-wider text-xs mb-1">
+            <h3 className="text-rose-800 dark:text-rose-400 font-semibold uppercase tracking-wider text-xs mb-1">
               Наименьший балл безопасности
             </h3>
-            <div className="text-lg sm:text-2xl font-bold text-slate-900 truncate">
+            <div className="text-lg sm:text-2xl font-bold text-slate-900 dark:text-white truncate">
               {mostRisky?.name || (isLoading ? "Загрузка..." : "—")}
             </div>
             <div className="text-sm text-slate-500 truncate">
@@ -221,7 +221,7 @@ export const Dashboard: React.FC = () => {
       </div>
 
       {error && (
-        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 text-amber-900 text-sm">
+        <div className="bg-amber-50 dark:bg-amber-950 border border-amber-200 dark:border-amber-800 rounded-lg p-4 text-amber-900 dark:text-amber-200 text-sm">
           Не удалось загрузить данные бенчмарков.
         </div>
       )}
@@ -230,7 +230,7 @@ export const Dashboard: React.FC = () => {
       <div className="lg:hidden">
         <button
           onClick={() => setFiltersOpen((prev) => !prev)}
-          className="w-full flex items-center justify-between px-4 py-3 bg-white border border-slate-200 rounded-lg shadow-sm text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors"
+          className="w-full flex items-center justify-between px-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg shadow-sm text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
         >
           <div className="flex items-center gap-2">
             <Filter className="w-4 h-4" />
@@ -254,7 +254,7 @@ export const Dashboard: React.FC = () => {
             filtersOpen ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
           }`}
         >
-          <div className="mt-2 bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
+          <div className="mt-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-4 shadow-sm">
             <FiltersPanel />
           </div>
         </div>
@@ -263,9 +263,9 @@ export const Dashboard: React.FC = () => {
       <div className="flex flex-col lg:flex-row gap-4 lg:gap-8">
         {/* Desktop Filters Sidebar */}
         <div className="hidden lg:block w-64 flex-shrink-0">
-          <div className="bg-white rounded-lg border border-slate-200 p-5 shadow-sm sticky top-24">
+          <div className="bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 p-5 shadow-sm sticky top-24">
             <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2 text-slate-900 font-semibold">
+              <div className="flex items-center gap-2 text-slate-900 dark:text-white font-semibold">
                 <Filter className="w-4 h-4" /> Фильтры
               </div>
               {activeFilterCount > 0 && (
@@ -282,11 +282,11 @@ export const Dashboard: React.FC = () => {
         </div>
 
         {/* Leaderboard Table */}
-        <div className="flex-1 bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden">
+        <div className="flex-1 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="bg-slate-50 border-b border-slate-200 text-xs uppercase tracking-wider text-slate-500">
+                <tr className="bg-slate-50 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400">
                   {/* Rank — visible on sm+ */}
                   <th
                     className="p-3 sm:p-4 font-semibold cursor-pointer hover:text-slate-700 w-12 hidden xs:table-cell sm:table-cell"
@@ -318,12 +318,12 @@ export const Dashboard: React.FC = () => {
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-700">
                 {filteredModels.map((model) => (
                   <tr
                     key={model.id}
                     onClick={() => navigate(`/model/${model.id}`)}
-                    className="hover:bg-slate-50 cursor-pointer transition-colors group"
+                    className="hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer transition-colors group"
                   >
                     {/* Rank */}
                     <td className="p-3 sm:p-4 text-slate-400 font-mono text-sm hidden xs:table-cell sm:table-cell">
@@ -338,7 +338,7 @@ export const Dashboard: React.FC = () => {
                           #{model.rank}
                         </span>
                         <div className="min-w-0">
-                          <div className="font-semibold text-slate-900 text-sm sm:text-base leading-tight truncate max-w-[160px] sm:max-w-none">
+                          <div className="font-semibold text-slate-900 dark:text-white text-sm sm:text-base leading-tight truncate max-w-[160px] sm:max-w-none">
                             {model.name}
                           </div>
                           <div className="text-xs text-slate-500 truncate">
@@ -400,7 +400,7 @@ export const Dashboard: React.FC = () => {
 
           {/* Footer: result count */}
           {filteredModels.length > 0 && (
-            <div className="px-4 py-3 bg-slate-50 border-t border-slate-200 text-xs text-slate-500">
+            <div className="px-4 py-3 bg-slate-50 dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 text-xs text-slate-500 dark:text-slate-400">
               Показано {filteredModels.length}{" "}
               {filteredModels.length === data?.models?.length
                 ? "моделей"

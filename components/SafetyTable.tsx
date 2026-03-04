@@ -43,7 +43,7 @@ const SafetyScoreBadge: React.FC<SafetyScoreBadgeProps> = ({ score }) => {
       >
         {score.toFixed(1)}
       </span>
-      <span className="text-xs text-slate-500 capitalize hidden sm:inline">
+      <span className="text-xs text-slate-500 dark:text-slate-400 capitalize hidden sm:inline">
         {level}
       </span>
     </div>
@@ -73,7 +73,7 @@ const SourceBadge: React.FC<{ source: string }> = ({ source }) => {
 const LoadingState: React.FC = () => (
   <div className="flex flex-col items-center justify-center py-12">
     <Loader2 className="w-8 h-8 text-blue-500 animate-spin mb-4" />
-    <p className="text-slate-600">Загрузка бенчмарков безопасности...</p>
+    <p className="text-slate-600 dark:text-slate-400">Загрузка бенчмарков безопасности...</p>
     <p className="text-sm text-slate-400 mt-1">
       Получение данных из AILuminate, CalypsoAI, Phare и HuggingFace
     </p>
@@ -88,10 +88,10 @@ const ErrorState: React.FC<{ error: Error; onRetry: () => void }> = ({
     <div className="bg-red-50 rounded-full p-3 mb-4">
       <AlertCircle className="w-8 h-8 text-red-500" />
     </div>
-    <h3 className="text-lg font-semibold text-slate-900 mb-2">
+    <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">
       Не удалось загрузить бенчмарки
     </h3>
-    <p className="text-slate-600 text-center max-w-md mb-4">
+    <p className="text-slate-600 dark:text-slate-400 text-center max-w-md mb-4">
       {error.message || "При получении данных бенчмарка произошла ошибка."}
     </p>
     <button
@@ -109,10 +109,10 @@ const EmptyState: React.FC = () => (
     <div className="bg-slate-100 rounded-full p-3 mb-4">
       <AlertCircle className="w-8 h-8 text-slate-400" />
     </div>
-    <h3 className="text-lg font-semibold text-slate-900 mb-2">
+    <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">
       Бенчмарки не найдены
     </h3>
-    <p className="text-slate-600">
+    <p className="text-slate-600 dark:text-slate-400">
       Данные бенчмарков безопасности недоступны.
     </p>
   </div>
@@ -180,7 +180,7 @@ export const SafetyTable: React.FC<SafetyTableProps> = ({
   // Loading state
   if (isLoading) {
     return (
-      <div className={`bg-white rounded-xl shadow-sm border border-slate-200 ${className}`}>
+      <div className={`bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 ${className}`}>
         <LoadingState />
       </div>
     );
@@ -189,7 +189,7 @@ export const SafetyTable: React.FC<SafetyTableProps> = ({
   // Error state
   if (error) {
     return (
-      <div className={`bg-white rounded-xl shadow-sm border border-slate-200 ${className}`}>
+      <div className={`bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 ${className}`}>
         <ErrorState error={error} onRetry={() => refetch()} />
       </div>
     );
@@ -198,7 +198,7 @@ export const SafetyTable: React.FC<SafetyTableProps> = ({
   // Empty state
   if (!sortedData.length) {
     return (
-      <div className={`bg-white rounded-xl shadow-sm border border-slate-200 ${className}`}>
+      <div className={`bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 ${className}`}>
         <EmptyState />
       </div>
     );
@@ -206,15 +206,15 @@ export const SafetyTable: React.FC<SafetyTableProps> = ({
 
   return (
     <div
-      className={`bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden ${className}`}
+      className={`bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden ${className}`}
     >
       {/* Header */}
-      <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between">
+      <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between">
         <div>
-          <h2 className="text-lg font-semibold text-slate-900">
+          <h2 className="text-lg font-semibold text-slate-900 dark:text-white">
             Бенчмарки безопасности
           </h2>
-          <p className="text-sm text-slate-500 mt-0.5">
+          <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">
             {sortedData.length} результатов из агрегированных источников
           </p>
         </div>
@@ -232,7 +232,7 @@ export const SafetyTable: React.FC<SafetyTableProps> = ({
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
-            <tr className="bg-slate-50 border-b border-slate-200">
+            <tr className="bg-slate-50 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700">
               <th
                 className="text-left px-6 py-3 text-xs font-semibold text-slate-600 uppercase tracking-wider cursor-pointer hover:bg-slate-100"
                 onClick={() => handleSort("model_name")}
@@ -267,7 +267,7 @@ export const SafetyTable: React.FC<SafetyTableProps> = ({
               )}
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-200">
+          <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
             {sortedData.map((benchmark, index) => (
               <TableRow
                 key={`${benchmark.model_name}-${benchmark.metric}-${benchmark.source}-${index}`}
@@ -281,8 +281,8 @@ export const SafetyTable: React.FC<SafetyTableProps> = ({
       </div>
 
       {/* Footer with legend */}
-      <div className="px-6 py-3 bg-slate-50 border-t border-slate-200">
-        <div className="flex flex-wrap items-center gap-4 text-xs text-slate-500">
+      <div className="px-6 py-3 bg-slate-50 dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700">
+        <div className="flex flex-wrap items-center gap-4 text-xs text-slate-500 dark:text-slate-400">
           <span className="font-medium">Обозначения:</span>
           <span className="flex items-center gap-1.5">
             <span className="w-3 h-3 rounded-full bg-green-500"></span>
@@ -312,9 +312,9 @@ const TableRow: React.FC<{
   showSource: boolean;
   showMetric: boolean;
 }> = React.memo(({ benchmark, showSource, showMetric }) => (
-  <tr className="hover:bg-slate-50 transition-colors">
+  <tr className="hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
     <td className="px-6 py-4">
-      <div className="font-medium text-slate-900">{benchmark.model_name}</div>
+      <div className="font-medium text-slate-900 dark:text-slate-100">{benchmark.model_name}</div>
       {benchmark.raw_score !== undefined && (
         <div className="text-xs text-slate-500 mt-0.5">
           Исх.: {benchmark.raw_score.toFixed(3)} ({benchmark.score_scale})
@@ -325,7 +325,7 @@ const TableRow: React.FC<{
       <SafetyScoreBadge score={benchmark.safety_score} />
     </td>
     {showMetric && (
-      <td className="px-6 py-4 text-slate-700">{benchmark.metric}</td>
+      <td className="px-6 py-4 text-slate-700 dark:text-slate-300">{benchmark.metric}</td>
     )}
     {showSource && (
       <td className="px-6 py-4">
